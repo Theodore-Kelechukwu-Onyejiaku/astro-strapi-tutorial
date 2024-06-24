@@ -1,0 +1,31 @@
+---
+export const prerender = true;
+import Layout from "../layouts/Layout.astro";
+import Hero from "../components/Hero.astro";
+import About from "../components/About.astro";
+import fetchApi from "../lib/strapi";
+
+const pageData = await fetchApi({
+  endpoint: "pages",
+  page: "LandingPage",
+  wrappedByKey: "data",
+});
+
+const heroData = pageData.find((pd) => pd.__component === "hero.hero");
+const { heroText, heroDescription } = heroData;
+
+const aboutData = pageData.find((pd) => pd.__component === "about.about");
+const { aboutText } = aboutData;
+const {
+  aboutPhoto: {
+    data: {
+      attributes: { url: aboutPhotoURL },
+    },
+  },
+} = aboutData;
+---
+
+<Layout>
+  <Hero {heroText} {heroDescription} />
+  <About {aboutText} {aboutPhotoURL} />
+</Layout>

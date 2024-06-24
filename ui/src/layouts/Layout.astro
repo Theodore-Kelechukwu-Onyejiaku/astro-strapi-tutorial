@@ -1,0 +1,22 @@
+---
+import Head from "./Head.astro";
+import Nav from "./Nav.astro";
+const { title = "Just a title", description = "Adescription" } = Astro.props;
+---
+
+<html>
+  <Head {title} {description} />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="/styles/styles.css" />
+  <body>
+    <Nav />
+    <main>
+      <section>
+        <slot />
+      </section>
+    </main>
+  </body>
+</html>

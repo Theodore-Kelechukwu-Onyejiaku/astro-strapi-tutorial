@@ -1,0 +1,70 @@
+---
+import { Image } from "astro:assets";
+import MarkdownComponent from "../../../components/MarkdownComponent.astro";
+import Layout from "../../../layouts/Layout.astro";
+import fetchApi from "../../../lib/strapi";
+
+// export async function getStaticPaths() {
+//   const articles = await fetchApi({
+//     endpoint: "blogs",
+//     wrappedByKey: "data",
+//     locale: "es",
+//   });
+
+//   return articles.map((article) => ({
+//     params: { slug: article.attributes.slug },
+//     props: article,
+//   }));
+// }
+// const article = Astro.props;
+let article;
+
+const { slug } = Astro.params;
+
+try {
+  article = await fetchApi({
+    endpoint: "blogs",
+    wrappedByKey: "data",
+    wrappedByList: true,
+    locale: "es",
+    query: {
+      "filters[slug][$eq]": slug || "",
+    },
+  });
+} catch (error) {
+  Astro.redirect("/404");
+}
+
+function formatRelativeTime(dateString) {
+  const date = new Date(dateString);
+  const now = new Date();
+  const rtf = new Intl.RelativeTimeFormat("es", { numeric: "auto" });
+
+  const daysDifference = Math.round((now - date) / (1000 * 60 * 60 * 24));
+
+  if (daysDifference < 1) {
+    const hoursDifference = Math.round((now - date) / (1000 * 60 * 60));
+    if (hoursDifference < 1) {
+      const minutesDifference = Math.round((now - date) / (1000 * 60));
+      return rtf.format(-minutesDifference, "minute");
+    }
+    return rtf.format(-hoursDifference, "hour");
+  }
+
+  return rtf.format(-daysDifference, "day");
+}
+const relativeTime = formatRelativeTime(article.attributes.publishedAt);
+---
+
+<Layout>
+  <Image
+    src={import.meta.env.STRAPI_URL +
+      article.attributes.image.data[0].attributes.formats.small.url}
+    width="500"
+    height="500"
+    alt={article.attributes.title}
+  />
+  <h1>{article.attributes.title}</h1>
+  <p>Artículo escrito {relativeTime}</p>
+  <MarkdownComponent content={article.attributes.content} />
+</Layout>

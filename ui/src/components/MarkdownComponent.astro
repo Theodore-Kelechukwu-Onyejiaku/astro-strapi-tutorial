@@ -1,0 +1,6 @@
+---
+import { marked } from "marked";
+const content = marked.parse(Astro.props.content);
+---
+
+<article set:html={content} />
