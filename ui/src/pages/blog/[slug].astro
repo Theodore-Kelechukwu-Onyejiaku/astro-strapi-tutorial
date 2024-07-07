@@ -57,13 +57,6 @@ const relativeTime = formatRelativeTime(article.attributes.publishedAt);
 ---
 
 <Layout>
-  {
-    JSON.stringify(
-      article.attributes.image.data[0].attributes.formats.small.url,
-      null,
-      4
-    )
-  }
   <Image
     src={article.attributes.image.data[0].attributes.formats.small.url}
     width="500"
