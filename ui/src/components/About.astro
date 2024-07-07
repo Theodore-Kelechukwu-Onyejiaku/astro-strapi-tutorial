@@ -1,7 +1,8 @@
 ---
 import { Image } from "astro:assets";
 const { aboutText, aboutPhotoURL } = Astro.props;
-const photoURL = `${import.meta.env.STRAPI_URL}${aboutPhotoURL}`;
+// const photoURL = `${import.meta.env.STRAPI_URL}${aboutPhotoURL}`;
+const photoURL = aboutPhotoURL;
 ---
 
 <p>{aboutText}</p>
