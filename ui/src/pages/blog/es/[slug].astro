@@ -57,9 +57,15 @@ const relativeTime = formatRelativeTime(article.attributes.publishedAt);
 ---
 
 <Layout>
+  {
+    JSON.stringify(
+      article.attributes.image.data[0].attributes.formats.small.url,
+      null,
+      4
+    )
+  }
   <Image
-    src={import.meta.env.STRAPI_URL +
-      article.attributes.image.data[0].attributes.formats.small.url}
+    src={article.attributes.image.data[0].attributes.formats.small.url}
     width="500"
     height="500"
     alt={article.attributes.title}
