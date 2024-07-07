@@ -16,6 +16,7 @@ const { heroText, heroDescription } = heroData;
 
 const aboutData = pageData.find((pd) => pd.__component === "about.about");
 const { aboutText } = aboutData;
+console.log(aboutData.aboutPhoto.data.attributes.url);
 const {
   aboutPhoto: {
     data: {
