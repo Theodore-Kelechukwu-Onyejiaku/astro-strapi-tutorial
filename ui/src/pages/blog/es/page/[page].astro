@@ -1,37 +1,43 @@
 ---
-export const prerender = true;
-import { getRelativeLocaleUrl } from "astro:i18n";
 import Layout from "../../../../layouts/Layout.astro";
 import fetchApi from "../../../../lib/strapi";
 
-export async function getStaticPaths({ paginate }) {
-  const response = await fetchApi({
-    endpoint: "blogs",
-    wrappedByKey: "data",
-    locale: "es",
-  });
-  const articles = response;
-  return paginate(articles, { pageSize: 2 });
-}
+const page = parseInt(Astro.params.page);
+const postsPerPage = 2;
 
-const { page } = Astro.props;
+const response = await fetchApi({
+  endpoint: "blogs",
+  locale: "es",
+  query: {
+    "pagination[page]": page,
+    "[pagination][pageSize]": postsPerPage,
+  },
+});
+
+const articles = response.data;
+const pagination = response.meta.pagination;
 ---
 
 <Layout>
-  <h1>Página {page.currentPage}</h1>
+  <h1>Page {page}</h1>
   <ul>
     {
-      page.data.map((article) => (
+      articles.map((article) => (
         <li>
-          <a
-            href={`/blog${getRelativeLocaleUrl("es")}${article.attributes.slug}`}
-          >
+          <a href={`/blog/es/${article.attributes.slug}`}>
             {article.attributes.title}
           </a>
         </li>
       ))
     }
   </ul>
-  {page.url.prev ? <a href={page.url.prev}>Página Anterior</a> : null} |
-  {page.url.next ? <a href={page.url.next}>Página Siguiente</a> : null}
+  {
+    pagination.page > 1 && (
+      <a href={`/blog/es/page/${pagination.page - 1}`}>Previous Page</a>
+    )
+  } | {
+    pagination.page < pagination.pageCount && (
+      <a href={`/blog/es/page/${pagination.page + 1}`}>Next Page</a>
+    )
+  }
 </Layout>
