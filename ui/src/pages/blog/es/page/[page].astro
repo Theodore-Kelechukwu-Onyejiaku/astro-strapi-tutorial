@@ -1,8 +1,8 @@
 ---
-export const prerender = true
+export const prerender = true;
 import { getRelativeLocaleUrl } from "astro:i18n";
-import Layout from "../../../layouts/Layout.astro";
-import fetchApi from "../../../lib/strapi";
+import Layout from "../../../../layouts/Layout.astro";
+import fetchApi from "../../../../lib/strapi";
 
 export async function getStaticPaths({ paginate }) {
   const response = await fetchApi({
